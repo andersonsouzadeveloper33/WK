@@ -2,7 +2,7 @@ unit Produtos.Model;
 
 interface
 
-uses FireDAC.Comp.Client, System.SysUtils, FireDac.Stan.Param;
+uses FireDAC.Comp.Client, System.SysUtils, FireDac.Stan.Param, UntFuncoes;
 
 Type
   TProdutoModel = class
@@ -32,9 +32,8 @@ var
 begin
   Result := False;
 
-  Qry := TFDQuery.Create(nil);
+  CriaQry(Qry);
   try
-    Qry.Connection := DataModule1.Conexao;
     Qry.Close;
     Qry.SQL.Clear;
     Qry.SQL.Add('select descricao, preco_venda from produtos where codigo = :codigo');

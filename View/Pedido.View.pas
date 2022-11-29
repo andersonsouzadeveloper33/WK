@@ -8,20 +8,13 @@ uses
   Vcl.StdCtrls, Vcl.Mask, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async,
   FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Clientes.Control, Produtos.Control,
-  Pedido.Control;
+  Pedido.Control, Vcl.ExtCtrls;
 
 type
   TfrmVenda = class(TForm)
     edtCodCliente: TEdit;
     Label1: TLabel;
     edtNomeCliente: TEdit;
-    edtCodProduto: TEdit;
-    Label2: TLabel;
-    edtDescricao: TEdit;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    btnAdicionar: TButton;
     DbgItens: TDBGrid;
     cds: TClientDataSet;
     ds: TDataSource;
@@ -29,13 +22,26 @@ type
     cdscodigo: TIntegerField;
     cdsunitario: TFloatField;
     cdstotal: TFloatField;
-    edtUnitario: TMaskEdit;
-    edtTotal: TMaskEdit;
-    edtQtd: TEdit;
-    Button1: TButton;
+    BtnGravarPedido: TButton;
     lbTotalPedido: TLabel;
     cdsitem: TIntegerField;
     cdsquantidade: TIntegerField;
+    BtnBuscarPedido: TButton;
+    edtNumeroPedido: TEdit;
+    Label6: TLabel;
+    Bevel1: TBevel;
+    btnCancelarPedido: TButton;
+    PnAddProduto: TPanel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    edtCodProduto: TEdit;
+    edtDescricao: TEdit;
+    btnAdicionar: TButton;
+    edtUnitario: TMaskEdit;
+    edtTotal: TMaskEdit;
+    edtQtd: TEdit;
     procedure edtUnitarioChange(Sender: TObject);
     procedure edtTotalChange(Sender: TObject);
     procedure edtQtdExit(Sender: TObject);
@@ -48,7 +54,9 @@ type
     procedure edtCodProdutoKeyPress(Sender: TObject; var Key: Char);
     procedure edtCodClienteKeyPress(Sender: TObject; var Key: Char);
     procedure edtQtdKeyPress(Sender: TObject; var Key: Char);
-    procedure Button1Click(Sender: TObject);
+    procedure BtnGravarPedidoClick(Sender: TObject);
+    procedure BtnBuscarPedidoClick(Sender: TObject);
+    procedure btnCancelarPedidoClick(Sender: TObject);
   private
     { Private declarations }
     ItemAlt: Integer;
@@ -56,6 +64,7 @@ type
     FClienteControl: TClienteControl;
     FProdutoControl: TProdutoControl;
     FPedidoControl: TPedidoControl;
+    FConsultandoPedido: Boolean;
 
     function CalculaTotalItem(Qtd, Unitario: Double) : Double;
     function CalculaTotalPedido : Double;
@@ -74,6 +83,7 @@ type
     procedure LimparPedido;
     function ValidaInformouCliente: Boolean;
     function ValidaInformouProdutos: Boolean;
+    procedure LimpaBuscaPedido;
   public
     { Public declarations }
   end;
@@ -177,7 +187,7 @@ begin
     Result := False;
 end;
 
-procedure TfrmVenda.Button1Click(Sender: TObject);
+procedure TfrmVenda.BtnGravarPedidoClick(Sender: TObject);
 begin
   if not ValidaInformouCliente then
   begin
@@ -202,10 +212,49 @@ begin
     cds.next;
   end;
 
-  if FPedidoControl.GravarPedido(StrToInt(edtCodCliente.Text), Date, CalculaTotalPedido) then
+  if FPedidoControl.FinalizarPedido(StrToInt(edtCodCliente.Text), Date, CalculaTotalPedido) then
   begin
     ShowMessage('Pedido finalizado!');
     LimparPedido;
+  end;
+end;
+
+procedure TfrmVenda.BtnBuscarPedidoClick(Sender: TObject);
+var
+  CodigoCliente: Integer;
+  NomeCliente: String;
+  Total: Double;
+begin
+  cds.EmptyDataSet;
+  if not FPedidoControl.ConsultarPedido(StrToInt(edtNumeroPedido.Text),
+    CodigoCliente, NomeCliente, Total, cds) then
+  begin
+    ShowMessage('Pedido não existe. Verifique!');
+    FConsultandoPedido := False;
+    Exit;
+  end;
+
+  edtNumeroPedido.ReadOnly := True;
+
+  ReordenarItem;
+
+  edtCodCliente.Text := IntToStr(CodigoCliente);
+  edtNomeCliente.Text := NomeCliente;
+  lbTotalPedido.Caption := 'Total do Pedido: '+FloatToStrF(Total, ffNumber, 10,2);
+
+  btnCancelarPedido.Visible := True;
+  BtnGravarPedido.Enabled := False;
+  PnAddProduto.Visible := False;
+
+  FConsultandoPedido := True;
+end;
+
+procedure TfrmVenda.btnCancelarPedidoClick(Sender: TObject);
+begin
+  if FPedidoControl.CancelarPedido(StrToInt(edtNumeroPedido.Text)) then
+  begin
+    ShowMessage('Pedido cancelado com sucesso!');
+    LimpaBuscaPedido;
   end;
 end;
 
@@ -258,7 +307,10 @@ end;
 procedure TfrmVenda.edtCodClienteExit(Sender: TObject);
 begin
   if ValidaBuscarCliente then
-    BuscarCliente(StrToInt(edtCodCliente.Text))
+  begin
+    BuscarCliente(StrToInt(edtCodCliente.Text));
+    BtnBuscarPedido.Enabled := False;
+  end
   else
     LimparCliente;
 end;
@@ -322,6 +374,18 @@ begin
   FPedidoControl := TPedidoControl.Create;
 end;
 
+procedure TfrmVenda.LimpaBuscaPedido;
+begin
+  LimparPedido;
+  LimparCliente;
+  LimparAddItem;
+  BtnGravarPedido.Enabled := True;
+  btnCancelarPedido.Visible := False;
+  PnAddProduto.Visible := True;
+  edtNumeroPedido.Clear;
+  edtNumeroPedido.ReadOnly := False;
+end;
+
 procedure TfrmVenda.LimparAddItem;
 begin
   ItemAlt := 0;
@@ -338,6 +402,7 @@ procedure TfrmVenda.LimparCliente;
 begin
   edtCodCliente.Text := '0';
   edtNomeCliente.Clear;
+  BtnBuscarPedido.Enabled := True;
 end;
 
 procedure TfrmVenda.LimparPedido;

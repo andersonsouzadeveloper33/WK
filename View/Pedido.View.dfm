@@ -15,45 +15,24 @@ object frmVenda: TfrmVenda
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  object Bevel1: TBevel
+    Left = 424
+    Top = 6
+    Width = 185
+    Height = 50
+    Shape = bsFrame
+  end
   object Label1: TLabel
     Left = 12
-    Top = 8
+    Top = 18
     Width = 87
     Height = 13
     Caption = 'Informe o Cliente:'
   end
-  object Label2: TLabel
-    Left = 12
-    Top = 66
-    Width = 88
-    Height = 13
-    Caption = 'Informe o Produto'
-  end
-  object Label3: TLabel
-    Left = 298
-    Top = 66
-    Width = 56
-    Height = 13
-    Caption = 'Quantidade'
-  end
-  object Label4: TLabel
-    Left = 360
-    Top = 66
-    Width = 53
-    Height = 13
-    Caption = 'R$ Unit'#225'rio'
-  end
-  object Label5: TLabel
-    Left = 438
-    Top = 66
-    Width = 40
-    Height = 13
-    Caption = 'R$ Total'
-  end
   object lbTotalPedido: TLabel
     Left = 12
     Top = 324
-    Width = 313
+    Width = 257
     Height = 23
     AutoSize = False
     Caption = '0,00'
@@ -64,9 +43,16 @@ object frmVenda: TfrmVenda
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label6: TLabel
+    Left = 432
+    Top = 13
+    Width = 47
+    Height = 13
+    Caption = 'N'#186' Pedido'
+  end
   object edtCodCliente: TEdit
     Left = 12
-    Top = 25
+    Top = 35
     Width = 51
     Height = 21
     TabOrder = 0
@@ -75,41 +61,13 @@ object frmVenda: TfrmVenda
   end
   object edtNomeCliente: TEdit
     Left = 66
-    Top = 25
-    Width = 543
+    Top = 35
+    Width = 352
     Height = 21
     TabStop = False
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 1
-  end
-  object edtCodProduto: TEdit
-    Left = 12
-    Top = 82
-    Width = 51
-    Height = 21
-    TabOrder = 2
-    OnExit = edtCodProdutoExit
-    OnKeyPress = edtCodProdutoKeyPress
-  end
-  object edtDescricao: TEdit
-    Left = 66
-    Top = 82
-    Width = 226
-    Height = 21
-    Color = clBtnFace
-    ReadOnly = True
-    TabOrder = 3
-  end
-  object btnAdicionar: TButton
-    Left = 517
-    Top = 80
-    Width = 92
-    Height = 23
-    Cursor = crHandPoint
-    Caption = 'ADICIONAR'
-    TabOrder = 7
-    OnClick = btnAdicionarClick
   end
   object DbgItens: TDBGrid
     Left = 12
@@ -117,7 +75,7 @@ object frmVenda: TfrmVenda
     Width = 597
     Height = 205
     DataSource = ds
-    TabOrder = 8
+    TabOrder = 3
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -171,46 +129,143 @@ object frmVenda: TfrmVenda
         Visible = True
       end>
   end
-  object edtUnitario: TMaskEdit
-    Left = 360
-    Top = 82
-    Width = 72
-    Height = 21
-    TabOrder = 5
-    Text = ''
-    OnChange = edtUnitarioChange
-    OnExit = edtUnitarioExit
-  end
-  object edtTotal: TMaskEdit
-    Left = 438
-    Top = 82
-    Width = 71
-    Height = 21
-    TabStop = False
-    Color = clBtnFace
-    ReadOnly = True
-    TabOrder = 6
-    Text = ''
-    OnChange = edtTotalChange
-  end
-  object edtQtd: TEdit
-    Left = 298
-    Top = 82
-    Width = 56
-    Height = 21
-    TabOrder = 4
-    OnExit = edtQtdExit
-    OnKeyPress = edtQtdKeyPress
-  end
-  object Button1: TButton
+  object BtnGravarPedido: TButton
     Left = 456
     Top = 320
     Width = 153
     Height = 33
     Cursor = crHandPoint
     Caption = 'GRAVAR PEDIDO'
-    TabOrder = 9
-    OnClick = Button1Click
+    TabOrder = 4
+    OnClick = BtnGravarPedidoClick
+  end
+  object BtnBuscarPedido: TButton
+    Left = 522
+    Top = 27
+    Width = 83
+    Height = 23
+    Cursor = crHandPoint
+    Caption = 'BUSCAR'
+    TabOrder = 5
+    OnClick = BtnBuscarPedidoClick
+  end
+  object edtNumeroPedido: TEdit
+    Left = 432
+    Top = 29
+    Width = 77
+    Height = 21
+    TabOrder = 6
+    OnExit = edtCodClienteExit
+    OnKeyPress = edtCodClienteKeyPress
+  end
+  object btnCancelarPedido: TButton
+    Left = 298
+    Top = 320
+    Width = 153
+    Height = 33
+    Cursor = crHandPoint
+    Caption = 'CANCELAR PEDIDO'
+    TabOrder = 7
+    Visible = False
+    OnClick = btnCancelarPedidoClick
+  end
+  object PnAddProduto: TPanel
+    Left = 12
+    Top = 60
+    Width = 597
+    Height = 45
+    BevelKind = bkFlat
+    BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
+    TabOrder = 2
+    object Label2: TLabel
+      Left = 4
+      Top = 2
+      Width = 88
+      Height = 13
+      Caption = 'Informe o Produto'
+    end
+    object Label3: TLabel
+      Left = 290
+      Top = 2
+      Width = 56
+      Height = 13
+      Caption = 'Quantidade'
+    end
+    object Label4: TLabel
+      Left = 352
+      Top = 2
+      Width = 53
+      Height = 13
+      Caption = 'R$ Unit'#225'rio'
+    end
+    object Label5: TLabel
+      Left = 430
+      Top = 2
+      Width = 40
+      Height = 13
+      Caption = 'R$ Total'
+    end
+    object edtCodProduto: TEdit
+      Left = 4
+      Top = 16
+      Width = 51
+      Height = 21
+      TabOrder = 0
+      OnExit = edtCodProdutoExit
+      OnKeyPress = edtCodProdutoKeyPress
+    end
+    object edtDescricao: TEdit
+      Left = 58
+      Top = 16
+      Width = 226
+      Height = 21
+      Color = clBtnFace
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object btnAdicionar: TButton
+      Left = 505
+      Top = 14
+      Width = 86
+      Height = 23
+      Cursor = crHandPoint
+      Caption = 'ADICIONAR'
+      TabOrder = 5
+      OnClick = btnAdicionarClick
+    end
+    object edtUnitario: TMaskEdit
+      Left = 352
+      Top = 16
+      Width = 72
+      Height = 21
+      TabOrder = 3
+      Text = ''
+      OnChange = edtUnitarioChange
+      OnExit = edtUnitarioExit
+    end
+    object edtTotal: TMaskEdit
+      Left = 430
+      Top = 16
+      Width = 71
+      Height = 21
+      TabStop = False
+      Color = clBtnFace
+      ReadOnly = True
+      TabOrder = 4
+      Text = ''
+      OnChange = edtTotalChange
+    end
+    object edtQtd: TEdit
+      Left = 290
+      Top = 16
+      Width = 56
+      Height = 21
+      TabOrder = 2
+      OnExit = edtQtdExit
+      OnKeyPress = edtQtdKeyPress
+    end
   end
   object cds: TClientDataSet
     Aggregates = <>
