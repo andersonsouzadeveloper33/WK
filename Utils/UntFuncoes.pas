@@ -2,9 +2,10 @@ unit UntFuncoes;
 
 interface
 
-uses StrUtils, System.Sysutils;
+uses StrUtils, System.Sysutils, FireDAC.Comp.Client, untDmPrincipal;
 
 function FormatarMoeda(valor: string): string;
+procedure CriaQry(var Qry: TFDQuery);
 
 implementation
 
@@ -65,6 +66,12 @@ begin
   else
     Result := LeftStr(valor, Length(valor) - 2) + ',' + decimais;
   end;
+end;
+
+procedure CriaQry(var Qry: TFDQuery);
+begin
+  Qry := TFDQuery.Create(nil);
+  Qry.Connection := DataModule1.Conexao;
 end;
 
 end.

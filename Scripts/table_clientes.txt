@@ -1,0 +1,8 @@
+CREATE TABLE `wkdatabase`.`clientes` (
+  `codigo` INT NOT NULL,
+  `nome` VARCHAR(50) NULL,
+  `cidade` VARCHAR(50) NULL,
+  `uf` CHAR(2) NULL,
+  PRIMARY KEY (`codigo`),
+  UNIQUE INDEX `codigo_UNIQUE` (`codigo` ASC) VISIBLE,
+  INDEX `nome` (`nome` ASC) VISIBLE);

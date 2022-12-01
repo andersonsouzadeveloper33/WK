@@ -1,0 +1,7 @@
+CREATE TABLE `wkdatabase`.`produtos` (
+  `codigo` INT NOT NULL,
+  `descricao` VARCHAR(60) NULL,
+  `preco_venda` DECIMAL(10,2) NULL,
+  PRIMARY KEY (`codigo`),
+  UNIQUE INDEX `codigo_UNIQUE` (`codigo` ASC) VISIBLE,
+  INDEX `descricao` (`descricao` ASC) VISIBLE);

@@ -1,0 +1,13 @@
+CREATE TABLE `wkdatabase`.`pedidos` (
+  `numero_pedido` INT NOT NULL,
+  `data_emissao` DATE NULL,
+  `codigo_cliente` INT NULL,
+  `valor_total` DECIMAL(10,2) NULL,
+  PRIMARY KEY (`numero_pedido`),
+  UNIQUE INDEX `numero_pedido_UNIQUE` (`numero_pedido` ASC) VISIBLE,
+  INDEX `fk_pedido_codigo_cliente_idx` (`codigo_cliente` ASC) VISIBLE,
+  CONSTRAINT `fk_pedido_codigo_cliente`
+    FOREIGN KEY (`codigo_cliente`)
+    REFERENCES `wkdatabase`.`clientes` (`codigo`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE);

@@ -1,0 +1,21 @@
+CREATE TABLE `wkdatabase`.`pedidos_produtos` (
+  `id` INT NOT NULL,
+  `codigo_produto` INT NOT NULL,
+  `numero_pedido` INT NOT NULL,
+  `quantidade` INT NULL,
+  `valor_unitario` DECIMAL(10,2) NULL,
+  `valor_total` DECIMAL(10,2) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_pedidos_produtos_produto_idx` (`codigo_produto` ASC) VISIBLE,
+  INDEX `fk_pedidos_produtos_pedido_idx` (`numero_pedido` ASC) VISIBLE,
+  CONSTRAINT `fk_pedidos_produtos_produto`
+    FOREIGN KEY (`codigo_produto`)
+    REFERENCES `wkdatabase`.`produtos` (`codigo`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_pedidos_produtos_pedido`
+    FOREIGN KEY (`numero_pedido`)
+    REFERENCES `wkdatabase`.`pedidos` (`numero_pedido`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE);
