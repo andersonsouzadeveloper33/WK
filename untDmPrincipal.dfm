@@ -6,7 +6,8 @@ object DataModule1: TDataModule1
   object Conexao: TFDConnection
     Params.Strings = (
       'Database=wkdatabase'
-      'User_Name=anderson'
+      'User_Name=root'
+      'Password=1234'
       'DriverID=MySQL')
     LoginPrompt = False
     Left = 56

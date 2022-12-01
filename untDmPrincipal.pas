@@ -35,6 +35,7 @@ begin
   Conexao.Connected := False;
   Conexao.Params.Values['Database'] := 'wkdatabase';
   Conexao.Params.Values['User_Name'] := 'root';
+  Conexao.Params.Values['Password'] := '1234';
   Conexao.Params.Values['Server'] := '127.0.0.1';
   Conexao.Params.Values['Port'] := '3306';
   Conexao.Connected := True;
